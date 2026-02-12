@@ -1,0 +1,76 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import {
+  LayoutDashboard,
+  Package,
+  FolderTree,
+  MessageCircle,
+  Boxes,
+  LogOut,
+  Package2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const navItems = [
+  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/categories", label: "Categories", icon: FolderTree },
+  { href: "/admin/orders", label: "Orders", icon: MessageCircle },
+  { href: "/admin/inventory", label: "Inventory", icon: Boxes },
+];
+
+export function AdminSidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/admin/login");
+    router.refresh();
+  }
+
+  return (
+    <aside className="flex w-60 flex-col border-r bg-white">
+      <div className="flex h-16 items-center gap-2 border-b px-4">
+        <Package2 className="h-6 w-6 text-primary" />
+        <span className="font-bold">ToyBox Admin</span>
+      </div>
+      <nav className="flex-1 space-y-1 p-3">
+        {navItems.map((item) => {
+          const isActive =
+            item.href === "/admin"
+              ? pathname === "/admin"
+              : pathname.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="border-t p-3">
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 text-muted-foreground"
+          onClick={handleLogout}
+        >
+          <LogOut className="h-4 w-4" />
+          Sign Out
+        </Button>
+      </div>
+    </aside>
+  );
+}
