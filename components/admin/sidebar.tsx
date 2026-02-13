@@ -11,6 +11,7 @@ import {
   Boxes,
   LogOut,
   Package2,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/orders", label: "Orders", icon: MessageCircle },
   { href: "/admin/inventory", label: "Inventory", icon: Boxes },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export function AdminSidebar() {
