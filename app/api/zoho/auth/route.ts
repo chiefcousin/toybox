@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 const ZOHO_AUTH_URL = "https://accounts.zoho.com/oauth/v2/auth";
@@ -8,7 +8,7 @@ const ZOHO_AUTH_URL = "https://accounts.zoho.com/oauth/v2/auth";
  * Redirects the admin to the Zoho OAuth consent screen.
  * Protected — requires an authenticated admin session.
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const supabase = createClient();
   const {
     data: { user },

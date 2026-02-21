@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { syncProductsFromZoho } from "@/lib/zoho/sync";
 
@@ -7,7 +7,7 @@ import { syncProductsFromZoho } from "@/lib/zoho/sync";
  * Triggers a full product sync from Zoho Inventory → Kaira Enterprises.
  * Protected — requires an authenticated admin session.
  */
-export async function POST(_request: NextRequest) {
+export async function POST() {
   const supabase = createClient();
   const {
     data: { user },
