@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Package className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-xl">ToyBox Admin</CardTitle>
+          <CardTitle className="text-xl">Kaira Admin</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

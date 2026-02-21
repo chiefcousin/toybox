@@ -12,8 +12,28 @@ import type { WhatsAppOrder } from "@/lib/types";
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<WhatsAppOrder[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  const [userRole, setUserRole] = useState<string>("admin");
   const { toast } = useToast();
   const supabase = createClient();
+
+  // Determine user role on mount
+  useEffect(() => {
+    async function fetchRole() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setUserRole(data?.role || "admin");
+    }
+    fetchRole();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isReadOnly = userRole === "staff";
+  const canEdit = userRole === "admin" || userRole === "partner";
 
   async function fetchOrders() {
     let query = supabase
@@ -35,24 +55,37 @@ export default function AdminOrdersPage() {
   }, [filter]);
 
   async function updateStatus(orderId: string, status: OrderStatus) {
-    const { error } = await supabase
-      .from("whatsapp_orders")
-      .update({ status })
-      .eq("id", orderId);
+    if (isReadOnly) return;
+    const res = await fetch(`/api/orders/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
 
-    if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      toast({
+        title: "Error",
+        description: json.error ?? "Failed to update status",
+        variant: "destructive",
+      });
     } else {
-      toast({ title: "Updated", description: `Order status changed to ${status}` });
+      const zohoNote = status === "confirmed" ? " — syncing to Zoho Inventory" : "";
+      toast({
+        title: "Updated",
+        description: `Order status changed to ${status}${zohoNote}`,
+      });
       fetchOrders();
     }
   }
 
   async function updateNotes(orderId: string, notes: string) {
-    await supabase
-      .from("whatsapp_orders")
-      .update({ admin_notes: notes })
-      .eq("id", orderId);
+    if (isReadOnly) return;
+    await fetch(`/api/orders/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ admin_notes: notes }),
+    });
   }
 
   const statusColors: Record<string, string> = {
@@ -64,7 +97,14 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">WhatsApp Orders</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">WhatsApp Orders</h1>
+        {isReadOnly && (
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+            View only
+          </span>
+        )}
+      </div>
 
       {/* Filter */}
       <div className="flex gap-2">
@@ -97,8 +137,8 @@ export default function AdminOrdersPage() {
                 <th className="px-4 py-3 text-left font-medium">Price</th>
                 <th className="px-4 py-3 text-left font-medium">Qty</th>
                 <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-left font-medium">Notes</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                {canEdit && <th className="px-4 py-3 text-left font-medium">Notes</th>}
+                <th className="px-4 py-3 text-right font-medium">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -117,30 +157,38 @@ export default function AdminOrdersPage() {
                   <td className="px-4 py-3">{formatPrice(order.price)}</td>
                   <td className="px-4 py-3">{order.quantity}</td>
                   <td className="px-4 py-3">
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        updateStatus(order.id, e.target.value as OrderStatus)
-                      }
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        statusColors[order.status]
-                      }`}
-                    >
-                      {ORDER_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {s.charAt(0).toUpperCase() + s.slice(1)}
-                        </option>
-                      ))}
-                    </select>
+                    {isReadOnly ? (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[order.status]}`}
+                      >
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </span>
+                    ) : (
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          updateStatus(order.id, e.target.value as OrderStatus)
+                        }
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[order.status]}`}
+                      >
+                        {ORDER_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {s.charAt(0).toUpperCase() + s.slice(1)}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </td>
-                  <td className="px-4 py-3">
-                    <Input
-                      defaultValue={order.admin_notes || ""}
-                      placeholder="Add note..."
-                      className="h-8 text-xs"
-                      onBlur={(e) => updateNotes(order.id, e.target.value)}
-                    />
-                  </td>
+                  {canEdit && (
+                    <td className="px-4 py-3">
+                      <Input
+                        defaultValue={order.admin_notes || ""}
+                        placeholder="Add note..."
+                        className="h-8 text-xs"
+                        onBlur={(e) => updateNotes(order.id, e.target.value)}
+                      />
+                    </td>
+                  )}
                   <td className="px-4 py-3 text-right">
                     <span className="text-xs text-muted-foreground">
                       {formatPrice(order.price * order.quantity)}
@@ -151,7 +199,7 @@ export default function AdminOrdersPage() {
               {!orders.length && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={canEdit ? 7 : 6}
                     className="px-4 py-8 text-center text-muted-foreground"
                   >
                     No orders yet

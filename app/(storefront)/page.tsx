@@ -28,7 +28,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroBanner
-        title={settings.hero_title || "Welcome to ToyBox"}
+        title={settings.hero_title || "Welcome to Kaira Enterprises"}
         subtitle={
           settings.hero_subtitle ||
           "Your favorite local toy store - browse online, order via WhatsApp!"

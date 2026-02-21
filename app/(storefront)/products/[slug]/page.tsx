@@ -31,7 +31,7 @@ export async function generateMetadata({
 
   return {
     title: product.name,
-    description: product.description || `Buy ${product.name} at ToyBox`,
+    description: product.description || `Buy ${product.name} at Kaira Enterprises`,
     openGraph: {
       images: product.product_images?.[0]?.url
         ? [product.product_images[0].url]
@@ -103,7 +103,7 @@ export default async function ProductDetailPage({
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Gallery */}
-        <ProductGallery images={typedProduct.product_images} />
+        <ProductGallery images={typedProduct.product_images} videoUrl={typedProduct.video_url} />
 
         {/* Info */}
         <div className="space-y-6">

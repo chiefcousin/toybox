@@ -13,14 +13,14 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    store_name: settings.store_name || "ToyBox",
+    store_name: settings.store_name || "Kaira Enterprises",
     whatsapp_number: settings.whatsapp_number || "",
-    hero_title: settings.hero_title || "Welcome to ToyBox",
+    hero_title: settings.hero_title || "Welcome to Kaira Enterprises",
     hero_subtitle: settings.hero_subtitle || "Your favorite local toy store - browse online, order via WhatsApp!",
     currency: settings.currency || "USD",
     store_address: settings.store_address || "",
     store_email: settings.store_email || "",
-    footer_text: settings.footer_text || "© 2026 ToyBox. All rights reserved.",
+    footer_text: settings.footer_text || "© 2026 Kaira Enterprises. All rights reserved.",
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -67,7 +67,7 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
             id="store_name"
             value={formData.store_name}
             onChange={(e) => setFormData({ ...formData, store_name: e.target.value })}
-            placeholder="ToyBox"
+            placeholder="Kaira Enterprises"
           />
         </div>
 
@@ -135,7 +135,7 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
             id="hero_title"
             value={formData.hero_title}
             onChange={(e) => setFormData({ ...formData, hero_title: e.target.value })}
-            placeholder="Welcome to ToyBox"
+            placeholder="Welcome to Kaira Enterprises"
           />
         </div>
 
@@ -161,7 +161,7 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
             id="footer_text"
             value={formData.footer_text}
             onChange={(e) => setFormData({ ...formData, footer_text: e.target.value })}
-            placeholder="© 2026 ToyBox. All rights reserved."
+            placeholder="© 2026 Kaira Enterprises. All rights reserved."
           />
         </div>
       </div>

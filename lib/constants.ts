@@ -1,5 +1,5 @@
-export const SITE_NAME = "ToyBox";
-export const SITE_DESCRIPTION = "Your local toy store - browse and order via WhatsApp";
+export const SITE_NAME = "Kaira Enterprises";
+export const SITE_DESCRIPTION = "Kaira Enterprises - browse our toy collection and order via WhatsApp";
 
 export const DEFAULT_WHATSAPP_NUMBER = ""; // Set in store_settings
 

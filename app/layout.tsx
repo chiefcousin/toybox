@@ -11,8 +11,8 @@ const geistSans = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "ToyBox - Your Local Toy Store",
-    template: "%s | ToyBox",
+    default: "Kaira Enterprises - Your Local Toy Store",
+    template: "%s | Kaira Enterprises",
   },
   description: "Browse our toy collection and order via WhatsApp",
 };

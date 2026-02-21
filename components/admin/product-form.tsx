@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUploader } from "./image-uploader";
 import { AGE_RANGES } from "@/lib/constants";
+import { Upload, X, Loader2 } from "lucide-react";
 import type { Product, ProductImage, Category } from "@/lib/types";
 
 interface ProductFormProps {
@@ -50,6 +51,8 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [imageUrls, setImageUrls] = useState<string[]>(
     product?.product_images?.map((img) => img.url) || []
   );
+  const [videoUrl, setVideoUrl] = useState<string>(product?.video_url || "");
+  const [videoUploading, setVideoUploading] = useState(false);
 
   function handleNameChange(value: string) {
     setName(value);
@@ -57,6 +60,35 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       setSlug(generateSlug(value));
     }
   }
+
+  const handleVideoUpload = useCallback(
+    async (file: File) => {
+      if (!file) return;
+      setVideoUploading(true);
+      const supabase = createClient();
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `products/${fileName}`;
+
+      const { error } = await supabase.storage
+        .from("product-videos")
+        .upload(path, file);
+
+      if (error) {
+        toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+        setVideoUploading(false);
+        return;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("product-videos")
+        .getPublicUrl(path);
+
+      setVideoUrl(publicUrl);
+      setVideoUploading(false);
+    },
+    [toast]
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,6 +121,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         .filter(Boolean),
       is_featured: isFeatured,
       is_active: isActive,
+      video_url: videoUrl || null,
     };
 
     let productId = product?.id;
@@ -121,13 +154,11 @@ export function ProductForm({ product, categories }: ProductFormProps) {
 
     // Sync images
     if (productId) {
-      // Delete existing images
       await supabase
         .from("product_images")
         .delete()
         .eq("product_id", productId);
 
-      // Insert new images
       if (imageUrls.length > 0) {
         const imageRecords = imageUrls.map((url, index) => ({
           product_id: productId!,
@@ -187,8 +218,68 @@ export function ProductForm({ product, categories }: ProductFormProps) {
           </div>
 
           <div className="rounded-lg border bg-white p-6 space-y-4">
-            <h2 className="font-semibold">Images</h2>
+            <h2 className="font-semibold">Images (up to 4)</h2>
             <ImageUploader images={imageUrls} onChange={setImageUrls} />
+            {imageUrls.length >= 4 && (
+              <p className="text-xs text-muted-foreground">Maximum of 4 images reached.</p>
+            )}
+          </div>
+
+          {/* Video Upload */}
+          <div className="rounded-lg border bg-white p-6 space-y-4">
+            <div>
+              <h2 className="font-semibold">Product Video</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Optional. Upload 1 video (MP4, WebM, MOV — recommended under 50 MB).
+              </p>
+            </div>
+
+            {videoUrl ? (
+              <div className="space-y-3">
+                <video
+                  src={videoUrl}
+                  controls
+                  className="w-full max-h-64 rounded-lg border bg-black"
+                  playsInline
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setVideoUrl("")}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Remove Video
+                </Button>
+              </div>
+            ) : (
+              <div className="relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors hover:border-primary/50">
+                {videoUploading ? (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span className="text-sm">Uploading video...</span>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">
+                      Drag a video here or click to upload
+                    </p>
+                  </>
+                )}
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleVideoUpload(file);
+                  }}
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                  disabled={videoUploading}
+                />
+              </div>
+            )}
           </div>
 
           <div className="rounded-lg border bg-white p-6 space-y-4">

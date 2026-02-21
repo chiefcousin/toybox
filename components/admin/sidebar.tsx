@@ -12,15 +12,19 @@ import {
   LogOut,
   Package2,
   Settings,
+  BarChart2,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart2 },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/orders", label: "Orders", icon: MessageCircle },
   { href: "/admin/inventory", label: "Inventory", icon: Boxes },
+  { href: "/admin/staff", label: "Staff", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
@@ -39,7 +43,7 @@ export function AdminSidebar() {
     <aside className="flex w-60 flex-col border-r bg-white">
       <div className="flex h-16 items-center gap-2 border-b px-4">
         <Package2 className="h-6 w-6 text-primary" />
-        <span className="font-bold">ToyBox Admin</span>
+        <span className="font-bold">Kaira Admin</span>
       </div>
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => {

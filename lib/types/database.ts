@@ -24,8 +24,12 @@ export interface Product {
   tags: string[];
   is_featured: boolean;
   is_active: boolean;
+  video_url: string | null;
   created_at: string;
   updated_at: string;
+  // Zoho Inventory integration
+  zoho_item_id: string | null;
+  last_synced_from_zoho: string | null;
 }
 
 export interface ProductImage {
@@ -49,6 +53,10 @@ export interface WhatsAppOrder {
   admin_notes: string | null;
   created_at: string;
   updated_at: string;
+  // Zoho Inventory integration
+  zoho_sales_order_id: string | null;
+  zoho_sync_error: string | null;
+  zoho_synced_at: string | null;
 }
 
 export interface ProductView {
@@ -63,6 +71,23 @@ export interface StoreSetting {
   value: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  address: string | null;
+  is_verified: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserRole {
+  id: string;
+  user_id: string;
+  role: 'admin' | 'partner' | 'staff';
+  created_at: string;
 }
 
 // Extended types with joins
