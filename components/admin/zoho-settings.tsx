@@ -15,7 +15,7 @@ interface ZohoSettingsProps {
 export function ZohoSettings({
   isConnected,
   lastSyncAt,
-  syncStatus: initialSyncStatus,
+  syncStatus: _initialSyncStatus,
   syncError: initialSyncError,
   webhookToken,
   baseUrl,

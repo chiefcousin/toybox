@@ -7,7 +7,7 @@ import { syncProductsFromZoho } from "@/lib/zoho/sync";
  * Triggers a full product sync from Zoho Inventory → Kaira Enterprises.
  * Protected — requires an authenticated admin session.
  */
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const supabase = createClient();
   const {
     data: { user },
