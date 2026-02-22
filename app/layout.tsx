@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Nunito } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  weight: ["400", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} font-sans antialiased`}>
+      <body className={`${nunito.variable} font-sans antialiased`}>
         {children}
         <Toaster />
       </body>
