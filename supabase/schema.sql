@@ -1,4 +1,4 @@
--- ToyBox Database Schema
+-- Kaira Enterprises Database Schema
 -- Run this in Supabase SQL Editor
 
 -- ============================================
@@ -248,11 +248,11 @@ INSERT INTO categories (name, slug, sort_order) VALUES
 
 -- Default store settings
 INSERT INTO store_settings (key, value) VALUES
-  ('store_name', 'ToyBox'),
+  ('store_name', 'Kaira Enterprises'),
   ('whatsapp_number', '1234567890'),
-  ('hero_title', 'Welcome to ToyBox'),
+  ('hero_title', 'Welcome to Kaira Enterprises'),
   ('hero_subtitle', 'Your favorite local toy store - browse online, order via WhatsApp!'),
   ('currency', 'USD'),
   ('store_address', ''),
   ('store_email', ''),
-  ('footer_text', '© 2026 ToyBox. All rights reserved.');
+  ('footer_text', '© 2026 Kaira Enterprises. All rights reserved.');

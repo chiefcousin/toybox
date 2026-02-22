@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://toybox.example.com";
+    process.env.NEXT_PUBLIC_SITE_URL || "https://kairaenterprises.example.com";
   const supabase = createAdminClient();
 
   const [{ data: products }, { data: categories }] = await Promise.all([
