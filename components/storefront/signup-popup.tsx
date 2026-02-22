@@ -14,7 +14,7 @@ type Step = "phone" | "otp" | "profile" | "done";
 export function SignupPopup() {
   const [visible, setVisible] = useState(false);
   const [step, setStep] = useState<Step>("phone");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+91");
   const [otp, setOtp] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -133,12 +133,12 @@ export function SignupPopup() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+2348012345678"
+                  placeholder="+919876543210"
                   required
                   autoFocus
                 />
                 <p className="text-xs text-muted-foreground">
-                  Include country code (e.g. +234 for Nigeria)
+                  Include country code (e.g. +91 for India)
                 </p>
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}

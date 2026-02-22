@@ -255,4 +255,7 @@ INSERT INTO store_settings (key, value) VALUES
   ('currency', 'USD'),
   ('store_address', ''),
   ('store_email', ''),
-  ('footer_text', '© 2026 Kaira Enterprises. All rights reserved.');
+  ('footer_text', '© 2026 Kaira Enterprises. All rights reserved.'),
+  ('instagram_url', ''),
+  ('facebook_url', ''),
+  ('google_maps_url', '');

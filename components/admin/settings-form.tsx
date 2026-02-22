@@ -21,6 +21,9 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
     store_address: settings.store_address || "",
     store_email: settings.store_email || "",
     footer_text: settings.footer_text || "© 2026 Kaira Enterprises. All rights reserved.",
+    instagram_url: settings.instagram_url || "",
+    facebook_url: settings.facebook_url || "",
+    google_maps_url: settings.google_maps_url || "",
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -163,6 +166,47 @@ export function SettingsForm({ settings }: { settings: Record<string, string> })
             onChange={(e) => setFormData({ ...formData, footer_text: e.target.value })}
             placeholder="© 2026 Kaira Enterprises. All rights reserved."
           />
+        </div>
+      </div>
+
+      {/* Social & Location */}
+      <div className="space-y-4 border-t pt-6">
+        <h3 className="text-lg font-medium">Social & Location</h3>
+
+        <div className="space-y-2">
+          <Label htmlFor="instagram_url">Instagram URL</Label>
+          <Input
+            id="instagram_url"
+            type="url"
+            value={formData.instagram_url}
+            onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
+            placeholder="https://instagram.com/yourstore"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="facebook_url">Facebook Page URL</Label>
+          <Input
+            id="facebook_url"
+            type="url"
+            value={formData.facebook_url}
+            onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
+            placeholder="https://facebook.com/yourpage"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="google_maps_url">Google Maps / Business Profile URL</Label>
+          <Input
+            id="google_maps_url"
+            type="url"
+            value={formData.google_maps_url}
+            onChange={(e) => setFormData({ ...formData, google_maps_url: e.target.value })}
+            placeholder="https://maps.app.goo.gl/..."
+          />
+          <p className="text-sm text-muted-foreground">
+            Paste your Google Maps share link or Google Business Profile URL.
+          </p>
         </div>
       </div>
 
