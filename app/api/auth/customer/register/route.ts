@@ -36,5 +36,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to save details" }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set("ka_customer", "1", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+  });
+  return response;
 }

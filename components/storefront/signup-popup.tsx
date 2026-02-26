@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { X, User, Loader2 } from "lucide-react";
+import { User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +20,9 @@ export function SignupPopup() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY)) return;
-    const timer = setTimeout(() => setVisible(true), 5000);
-    return () => clearTimeout(timer);
+    // Show immediately — signup is required
+    setVisible(true);
   }, []);
-
-  function dismiss() {
-    setVisible(false);
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,25 +50,15 @@ export function SignupPopup() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-        {!done && (
-          <button
-            onClick={dismiss}
-            className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        )}
-
         {!done ? (
           <>
             <div className="mb-5 text-center">
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                 <User className="h-6 w-6 text-primary" />
               </div>
-              <h2 className="text-xl font-bold">Save Your Details</h2>
+              <h2 className="text-xl font-bold">Sign Up to Continue</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Register once to make ordering via WhatsApp even faster.
+                Create an account to browse and order from our toy collection.
               </p>
             </div>
 
@@ -124,7 +110,7 @@ export function SignupPopup() {
 
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save & Continue
+                Sign Up & Start Shopping
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">

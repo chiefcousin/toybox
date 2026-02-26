@@ -1,0 +1,41 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Package } from "lucide-react";
+import { SignupForm } from "@/components/storefront/signup-form";
+
+export const metadata: Metadata = {
+  title: "Sign Up - Kaira Enterprises",
+  description:
+    "Create your account to browse and order toys from Kaira Enterprises",
+};
+
+export default function SignupPage() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 p-4">
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <Link href="/signup" className="inline-flex items-center gap-2">
+            <Package className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-bold tracking-tight">
+              Kaira Enterprises
+            </span>
+          </Link>
+        </div>
+
+        <SignupForm />
+
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          By signing up you agree to our{" "}
+          <Link
+            href="/privacy"
+            className="underline hover:text-foreground"
+            target="_blank"
+          >
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}

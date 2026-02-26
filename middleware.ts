@@ -7,8 +7,28 @@ const RESTRICTED_ALLOWED = ["/admin", "/admin/orders"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes (except /admin/login)
-  if (!pathname.startsWith("/admin") || pathname === "/admin/login") {
+  // ── Customer signup gate (storefront routes) ──────────────────────
+  if (!pathname.startsWith("/admin")) {
+    const hasCustomerCookie = request.cookies.has("ka_customer");
+
+    // Already registered → redirect away from /signup
+    if (pathname === "/signup") {
+      if (hasCustomerCookie) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+      return NextResponse.next();
+    }
+
+    // All other storefront routes require signup
+    if (!hasCustomerCookie) {
+      return NextResponse.redirect(new URL("/signup", request.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  // ── Admin route protection (existing logic) ───────────────────────
+  if (pathname === "/admin/login") {
     return NextResponse.next();
   }
 
@@ -79,5 +99,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/",
+    "/products/:path*",
+    "/categories/:path*",
+    "/search",
+    "/signup",
+  ],
 };
