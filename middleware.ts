@@ -106,5 +106,6 @@ export const config = {
     "/categories/:path*",
     "/search",
     "/signup",
+    "/profile",
   ],
 };

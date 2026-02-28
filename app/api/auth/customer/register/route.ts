@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set("ka_customer", "1", {
+  response.cookies.set("ka_customer", cleanPhone, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

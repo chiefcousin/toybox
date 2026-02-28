@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Package } from "lucide-react";
+import { Package, User } from "lucide-react";
 import { CategoryNav } from "./category-nav";
 import { SearchBar } from "./search-bar";
 
@@ -14,12 +14,21 @@ export function StorefrontHeader() {
         <div className="hidden flex-1 px-8 md:block">
           <SearchBar />
         </div>
-        <Link
-          href="/products"
-          className="text-sm font-medium text-muted-foreground hover:text-foreground"
-        >
-          All Toys
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/products"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            All Toys
+          </Link>
+          <Link
+            href="/profile"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            aria-label="My Profile"
+          >
+            <User className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
       <div className="border-t md:hidden">
         <div className="mx-auto max-w-7xl px-4 py-2">
